@@ -2,6 +2,7 @@ import NextAuth from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import GitHubProvider from "next-auth/providers/github"
 import TwitterProvider from "next-auth/providers/twitter"
+import FacebookProvider from "next-auth/providers/facebook"
 
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
 import clientPromise from "@/lib/mongodb"
@@ -12,6 +13,10 @@ export default NextAuth({
     GoogleProvider({
       clientId: process.env.GOOGLE_ID as string,
       clientSecret: process.env.GOOGLE_SECRET as string
+    }),
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_CLIENT_ID as string,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string
     }),
     GitHubProvider({
         clientId: process.env.GITHUB_ID as string,
