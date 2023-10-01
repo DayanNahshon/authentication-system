@@ -25,6 +25,10 @@ const FormSchema = z.object({
     password: z.string()
         .min(8, "Your password must be at least 8 characters")
         .max(52, "Your password must be less than 52 characters"),
+        confirm_Password: z.string(),
+}).refine((data) => data.password === data.confirm_Password, {
+    message: "Password doesn't match",
+    path: ["confirm_Password"],
 })
 
 //-----Type Form Schema
@@ -94,6 +98,16 @@ const RegisterForm: React.FunctionComponent = () => {
                         placeholder="Enter Your Password"
                         register={register}
                         error={errors?.password?.message}
+                        disabled={isSubmitting}
+                    />
+                    <Input
+                        name="confirm_Password"
+                        label="Confirm password"
+                        type="password"
+                        icon={<FiLock />}
+                        placeholder="Enter Your Password"
+                        register={register}
+                        error={errors?.confirmPassword?.message}
                         disabled={isSubmitting}
                     />
                 <button type='submit'>Submit</button>
