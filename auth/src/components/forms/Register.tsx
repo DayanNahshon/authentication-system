@@ -8,6 +8,8 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import validator from "validator"
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import zxcvbn from "zxcvbn"
 
 
 //-----Form Schema (with Zod)
@@ -36,9 +38,19 @@ type FormSchemaType = z.infer<typeof FormSchema>
 
 //-----RegisterForm Comp.
 const RegisterForm: React.FunctionComponent = () => {
+    const [passwordScore, setPasswordScore] = useState(0)
+
     const {register, handleSubmit, watch, formState: { errors, isSubmitting }} = useForm<FormSchemaType>({resolver: zodResolver(FormSchema)})
+
     const onSubmit = (data: any) => console.log(data)
-    console.log(watch())
+
+    const validatePasswordStrength = () => {
+        let password = watch().password
+        return zxcvbn(password ? password : "").score
+    }
+    useEffect(() => {
+        setPasswordScore(validatePasswordStrength())
+    }, [watch().password])
 
     return (
         <div className="w-full px-12 py-4">
@@ -100,6 +112,25 @@ const RegisterForm: React.FunctionComponent = () => {
                         error={errors?.password?.message}
                         disabled={isSubmitting}
                     />
+                    {
+                        watch().password?.length > 0 && (
+                            <div className='flex mt-2'>
+                                {
+                                    Array.from(Array(5).keys()).map((span, i) => (
+                                        <span className="w-1/5 px-1" key={i}>
+                                            <div className={`h-2 rounded-xl b ${
+                                                passwordScore <= 2 
+                                                ? "bg-red-400" 
+                                                : passwordScore < 4
+                                                ? "bg-yellow-400"
+                                                : "bg-green-500"
+                                            }`}></div>
+                                        </span>
+                                    ))
+                                }
+                            </div>
+                        )
+                    }
                     <Input
                         name="confirm_Password"
                         label="Confirm password"
@@ -107,7 +138,7 @@ const RegisterForm: React.FunctionComponent = () => {
                         icon={<FiLock />}
                         placeholder="Enter Your Password"
                         register={register}
-                        error={errors?.confirmPassword?.message}
+                        error={errors?.confirm_Password?.message}
                         disabled={isSubmitting}
                     />
                 <button type='submit'>Submit</button>
