@@ -10,6 +10,7 @@ import validator from "validator"
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import zxcvbn from "zxcvbn"
+import SlideButton from "../buttons/SlideButton"
 
 
 //-----Form Schema (with Zod)
@@ -141,7 +142,13 @@ const RegisterForm: React.FunctionComponent = () => {
                         error={errors?.confirm_Password?.message}
                         disabled={isSubmitting}
                     />
-                <button type='submit'>Submit</button>
+                    <SlideButton
+                        type="submit"
+                        text="Sign up"
+                        slide_text="Secure sign up"
+                        icon={<FiLock />}
+                        disabled={isSubmitting}
+                    />
             </form>
         </div>
     ) 
