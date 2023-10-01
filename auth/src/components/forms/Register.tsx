@@ -3,15 +3,16 @@ import Input from '../inputs/Input'
 import { CiUser } from "react-icons/ci"
 import { FiMail, FiLock } from "react-icons/fi"
 import { BsTelephone } from "react-icons/bs"
-import { useForm } from "react-hook-form"
+import { SubmitHandler, useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import validator from "validator"
-import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import zxcvbn from "zxcvbn"
 import SlideButton from "../buttons/SlideButton"
 import { signIn } from 'next-auth/react'
+import { toast } from 'react-toastify'
+import axios from 'axios'
 
 
 //-----Form Schema (with Zod)
@@ -49,7 +50,14 @@ const RegisterForm: React.FC = () => {
 
     const {register, handleSubmit, watch, formState: { errors, isSubmitting }} = useForm<FormSchemaType>({resolver: zodResolver(FormSchema)})
 
-    const onSubmit = (data: any) => console.log(data)
+    const onSubmit: SubmitHandler<FormSchemaType> = async (values) => {
+        try{
+            const { data } = await axios.post("/api/auth/signup", { ...values })
+            toast.success(data.message)
+        }catch(error: any){
+            toast.error(error.response.data.message)
+        }
+    }
 
     const validatePasswordStrength = () => {
         let password = watch().password

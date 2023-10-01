@@ -4,7 +4,7 @@ if (!process.env.MONGODB_URI) {
     throw new Error("Please add the databse url in .env file");
 }
 
-const uri: string|undefined = process.env.MONGODB_URI
+const uri: string = process.env.MONGODB_URI
 
 if(uri){
     mongoose.connect(uri)
