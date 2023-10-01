@@ -2,7 +2,6 @@ import { NextPageContext } from "next";
 import { useSession, signIn, signOut, getSession } from "next-auth/react"
 import { AiFillGithub } from "react-icons/ai";
 import { FaFacebook, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
-import { SiUdemy } from "react-icons/si";
 
 export default function Home() {
   /*
@@ -32,7 +31,7 @@ export default function Home() {
                     <button onClick={()=>signOut()} className="bg-blue-500 hover:bg-blue-700 text-md uppercase font-bold px-8 py-2 rounded-md sm:mr-2 mb-1 ease-linear transition-all duration-150">Sign Out</button>
                     ) : (
                     <div className="w-full flex justify-center">
-                      <button onClick={()=>signIn()} className=" text-center mt-12 bg-blue-500 hover:bg-blue-700 text-xl uppercase font-bold px-20 py-5 rounded-md sm:mr-2 mb-1 ease-linear transition-all duration-150">Sign In</button> 
+                      <button onClick={()=>signIn()} className="text-center mt-12 bg-blue-500 hover:bg-blue-700 text-xl uppercase font-bold px-20 py-5 rounded-md sm:mr-2 mb-1 ease-linear transition-all duration-150">Sign In</button> 
                     </div> 
                     ) 
                   }
