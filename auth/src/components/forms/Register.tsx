@@ -48,11 +48,12 @@ type FormSchemaType = z.infer<typeof FormSchema>
 const RegisterForm: React.FC = () => {
     const [passwordScore, setPasswordScore] = useState(0)
 
-    const {register, handleSubmit, watch, formState: { errors, isSubmitting }} = useForm<FormSchemaType>({resolver: zodResolver(FormSchema)})
+    const {register, handleSubmit, watch, reset, formState: { errors, isSubmitting }} = useForm<FormSchemaType>({resolver: zodResolver(FormSchema)})
 
     const onSubmit: SubmitHandler<FormSchemaType> = async (values) => {
         try{
             const { data } = await axios.post("/api/auth/signup", { ...values })
+            reset()
             toast.success(data.message)
         }catch(error: any){
             toast.error(error.response.data.message)
@@ -68,7 +69,7 @@ const RegisterForm: React.FC = () => {
     }, [watch().password])
 
     return (
-        <div className="border border-white w-full px-15 py-4 mt-4">
+        <div className="w-full px-12 py-4 mt-8">
             <h2 className="text-center text-2xl font-bold tracking-wide text-gray-800">Sign Up</h2>
             <p className="text-center text-sm text-gray-600 mt-2">
                 You already have an account? &nbsp;
