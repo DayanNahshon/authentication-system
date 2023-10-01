@@ -11,6 +11,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import zxcvbn from "zxcvbn"
 import SlideButton from "../buttons/SlideButton"
+import { signIn } from 'next-auth/react'
 
 
 //-----Form Schema (with Zod)
@@ -28,17 +29,22 @@ const FormSchema = z.object({
     password: z.string()
         .min(8, "Your password must be at least 8 characters")
         .max(52, "Your password must be less than 52 characters"),
-        confirm_Password: z.string(),
-}).refine((data) => data.password === data.confirm_Password, {
+    confirm_password: z.string(),
+    accept: z.literal(true, {
+        errorMap: () => ({
+            message: "Please agree to all the terms and conditions before continuing"
+        })
+    })
+}).refine((data) => data.password === data.confirm_password, {
     message: "Password doesn't match",
-    path: ["confirm_Password"],
+    path: ["confirm_password"],
 })
 
 //-----Type Form Schema
 type FormSchemaType = z.infer<typeof FormSchema>
 
 //-----RegisterForm Comp.
-const RegisterForm: React.FunctionComponent = () => {
+const RegisterForm: React.FC = () => {
     const [passwordScore, setPasswordScore] = useState(0)
 
     const {register, handleSubmit, watch, formState: { errors, isSubmitting }} = useForm<FormSchemaType>({resolver: zodResolver(FormSchema)})
@@ -54,11 +60,11 @@ const RegisterForm: React.FunctionComponent = () => {
     }, [watch().password])
 
     return (
-        <div className="w-full px-12 py-4">
+        <div className="border border-white w-full px-15 py-4 mt-4">
             <h2 className="text-center text-2xl font-bold tracking-wide text-gray-800">Sign Up</h2>
             <p className="text-center text-sm text-gray-600 mt-2">
                 You already have an account? &nbsp;
-                <Link href="/auth" className="text-blue-600 hover:text-blue-700 hover:underline cursor-pointer">Sign In</Link>
+                <button className="text-blue-600 hover:text-blue-700 hover:underline cursor-pointer" onClick={() => signIn()}>Sign In</button>
             </p>
             <form className='my-8 text-sm' onSubmit={handleSubmit(onSubmit)}>
                 <div className="gap-2 md:flex">
@@ -133,15 +139,34 @@ const RegisterForm: React.FunctionComponent = () => {
                         )
                     }
                     <Input
-                        name="confirm_Password"
-                        label="Confirm password"
+                        name="confirm_password"
+                        label="Confirm Password"
                         type="password"
                         icon={<FiLock />}
                         placeholder="Enter Your Password"
                         register={register}
-                        error={errors?.confirm_Password?.message}
+                        error={errors?.confirm_password?.message}
                         disabled={isSubmitting}
                     />
+                    <div className='flex items-center mt-3'>
+                        <input 
+                            type="checkbox" 
+                            id='accept' 
+                            className='mr-2 focus:ring-0 rounded' 
+                            {...register("accept")} 
+                        />
+                        <label htmlFor="accept" className="text-gray-700">
+                            I accept the&nbsp; 
+                            <a href="" className="text-blue-600 hover:text-blue-700 hover:underline" target="_blank">Terms and Conditions</a>
+                        </label>
+                    </div>
+                    <div>
+                        {
+                            errors?.accept && (
+                                <p className='text-sm text-red-600 mt-1'>{errors?.accept?.message}</p>
+                            )
+                        }
+                    </div>
                     <SlideButton
                         type="submit"
                         text="Sign up"
