@@ -40,13 +40,13 @@ const LoginForm: React.FC<ILoginFormProps> = (props) => {
           email: values.email,
           password: values.password,
           callbackUrl,
-        });
+        })
         if (res.error) {
-          return toast.error(res.error);
+          return toast.error(res.error)
         } else {
-          return router.push("/");
+          return router.push("/")
         }
-      };
+      } 
 
     return (
         <div className="w-full px-12 py-4 mt-8">

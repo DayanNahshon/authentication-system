@@ -25,7 +25,7 @@ export const UserSchema = new Schema<IUser>(
         },
         image:{
             type: String,
-            default: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fpixabay.com%2Fillustrations%2Ficon-user-male-avatar-business-5359553%2F&psig=AOvVaw3YJmucH1a7snQC4keSXVh4&ust=1696253960732000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCIjpx8f81IEDFQAAAAAdAAAAABAE",
+            default: "https://cdn.pixabay.com/photo/2016/03/31/19/58/avatar-1295429_1280.png",
         },
         password:{
             type: String,
