@@ -2,7 +2,9 @@ import User from "@/models/userModel"
 import { NextApiRequest, NextApiResponse } from "next"
 import validator from "validator"
 import bcrypt from 'bcryptjs'
-
+import jwt from "jsonwebtoken"
+import sendMail from "@/utils/sendMail"
+import { activateTemplateEmail } from "@/emailTemplates/activate"
 
 export default async function handler( req: NextApiRequest, res: NextApiResponse) {
     try{
@@ -39,6 +41,24 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
             phone,
             password: hashPassword
         })
+
+        /*
+            jwt.sign - חותם ויוצר טוקן
+            {id} - המידע המאוחסן בתוך הטוקן (המזהה של המשתמש)
+            {expiresIn: '2d'} - תוקף הטוקן
+        */
+        const activationToken = jwt.sign({ id: newUser._id.toString() }, process.env.JWT_KEY!, {expiresIn: '2d'})
+
+        const url = `${process.env.NEXTAUTH_URL}/activate/${activationToken}`
+
+        await sendMail(
+            newUser.email,
+            newUser.name,
+            "",
+            url,
+            "Activate your account - Hola Chat App",
+            activateTemplateEmail
+        )
 
         res.status(201).json({
             status: "success",
