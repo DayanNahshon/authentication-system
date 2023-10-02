@@ -1,7 +1,7 @@
-import { NextPageContext } from "next";
+import { NextPageContext } from "next"
 import { useSession, signIn, signOut, getSession } from "next-auth/react"
-import { AiFillGithub } from "react-icons/ai";
-import { FaFacebook, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa";
+import { AiFillGithub } from "react-icons/ai"
+import { FaFacebook, FaInstagram, FaLinkedin, FaYoutube } from "react-icons/fa"
 
 export default function Home() {
   /*
@@ -47,7 +47,9 @@ export default function Home() {
                       <h3 className="text-4xl font-semibold mb-2">{session?.user?.name}</h3>
                       <div className="text-sm mb-2 font-bold">{session?.user?.email}</div>
                       <div className="mb-2 mt-10">You logged in using &nbsp;
-                        <span className="capitalize bg-blue-400 text-white px-4 py-1 ml-2 font-bold italix text-lg rounded-md">{session?.user?.provider}</span>
+                      <span className="capitalize bg-blue-400 text-white px-4 py-1 ml-2 font-bold italix text-lg rounded-md">
+                        {session?.user?.provider}
+                        </span>
                       </div>
                     </div>
                   </>
