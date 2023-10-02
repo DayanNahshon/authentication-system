@@ -3,15 +3,39 @@ import GoogleProvider from 'next-auth/providers/google'
 import GitHubProvider from "next-auth/providers/github"
 import TwitterProvider from "next-auth/providers/twitter"
 import FacebookProvider from "next-auth/providers/facebook"
+import CredentialsProvider from "next-auth/providers/credentials"
 
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
 import clientPromise from "@/lib/mongodb"
 import { JWT } from 'next-auth/jwt'
 import { Adapter } from 'next-auth/adapters'
+import bcrypt from "bcryptjs"
+import UserModel from '@/models/userModel'
 
 export default NextAuth({
   adapter: MongoDBAdapter(clientPromise),
   providers: [
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Name", type: "text"},
+        password: { label: "Password", type: "password",},
+      },
+      async authorize(credentials) {
+        const user = await UserModel.findOne({ email: credentials!.email })
+        if (!user) {
+          throw new Error("Email is not registered.")
+        }
+        const isPasswordCorrect = await bcrypt.compare(
+          credentials!.password,
+          user.password
+        )
+        if (!isPasswordCorrect) {
+          throw new Error("Password is incorrect.")
+        }
+        return user
+      }
+    }),
     GoogleProvider({
       clientId: process.env.GOOGLE_ID as string,
       clientSecret: process.env.GOOGLE_SECRET as string

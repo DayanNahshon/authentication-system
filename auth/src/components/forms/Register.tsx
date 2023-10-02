@@ -13,6 +13,7 @@ import SlideButton from "../buttons/SlideButton"
 import { signIn } from 'next-auth/react'
 import { toast } from 'react-toastify'
 import axios from 'axios'
+import Link from 'next/link'
 
 
 //-----Form Schema (with Zod)
@@ -73,7 +74,9 @@ const RegisterForm: React.FC = () => {
             <h2 className="text-center text-2xl font-bold tracking-wide text-gray-800">Sign Up</h2>
             <p className="text-center text-sm text-gray-600 mt-2">
                 You already have an account? &nbsp;
-                <button className="text-blue-600 hover:text-blue-700 hover:underline cursor-pointer" onClick={() => signIn()}>Sign In</button>
+                <Link href="/auth" className="text-blue-600 hover:text-blue-700 hover:underline cursor-pointer">
+                    Sign in
+                </Link>
             </p>
             <form className='my-8 text-sm' onSubmit={handleSubmit(onSubmit)}>
                 <div className="gap-2 md:flex">
