@@ -4,9 +4,11 @@ import validator from "validator"
 import jwt from "jsonwebtoken"
 import sendMail from "../../../utils/sendMail"
 import { resetPasswordEmail } from "../../../emailTemplates/reset"
+import connectDb from "@/utils/connectDb"
 
 export default async function handler( req: NextApiRequest, res: NextApiResponse) {
     try{
+        await connectDb()
         const { email } = req.body
         
         if(!validator.isEmail(email)){

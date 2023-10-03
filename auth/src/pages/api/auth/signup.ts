@@ -1,13 +1,15 @@
-import User from "@/models/userModel"
+import UserModel from "../../../models/userModel"
 import { NextApiRequest, NextApiResponse } from "next"
 import validator from "validator"
 import bcrypt from 'bcryptjs'
 import jwt from "jsonwebtoken"
 import sendMail from "@/utils/sendMail"
 import { activateTemplateEmail } from "@/emailTemplates/activate"
+import connectDb from "@/utils/connectDb"
 
-export default async function handler( req: NextApiRequest, res: NextApiResponse) {
+export default async function signUp( req: NextApiRequest, res: NextApiResponse) {
     try{
+        await connectDb()
         const { first_name, last_name, email, phone, password } = req.body
         
         if(!first_name || !last_name || !email || !phone || !password){
@@ -21,7 +23,7 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
         }
 
         //Check if email exists in DB:
-        const userFound = await User.findOne({ email })
+        const userFound = await UserModel.findOne({ email })
         if(userFound){
             return res.status(400).json({ message: "This email address already exists."})
         }
@@ -35,7 +37,7 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
         const hashPassword = await bcrypt.hash(password, 12)
 
         //Register (Add user to DB):
-        const newUser = await User.create({
+        const newUser = await UserModel.create({
             name: `${first_name + " " + last_name}`,
             email,
             phone,

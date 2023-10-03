@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 import jwt from "jsonwebtoken"
 import User from "@/models/userModel"
 import bcrypt from 'bcryptjs'
+import connectDb from "@/utils/connectDb"
 
 interface UserToken {
     id: string
@@ -9,6 +10,7 @@ interface UserToken {
 
 export default async function resetPassword(req: NextApiRequest,res: NextApiResponse) {
     try{
+        await connectDb()
         const { token, password } = req.body
 
         /*

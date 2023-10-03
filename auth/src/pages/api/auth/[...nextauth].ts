@@ -11,6 +11,7 @@ import { JWT } from 'next-auth/jwt'
 import { Adapter } from 'next-auth/adapters'
 import bcrypt from "bcryptjs"
 import UserModel from '@/models/userModel'
+import connectDb from '@/utils/connectDb'
 
 export default NextAuth({
   adapter: MongoDBAdapter(clientPromise),
@@ -22,6 +23,7 @@ export default NextAuth({
         password: { label: "Password", type: "password",},
       },
       async authorize(credentials) {
+        await connectDb()
         const user = await UserModel.findOne({ email: credentials!.email })
         if (!user) {
           throw new Error("Email is not registered.")
