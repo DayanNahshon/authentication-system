@@ -10,7 +10,6 @@ import validator from "validator"
 import { useEffect, useState } from 'react'
 import zxcvbn from "zxcvbn"
 import SlideButton from "../buttons/SlideButton"
-import { signIn } from 'next-auth/react'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 import Link from 'next/link'
